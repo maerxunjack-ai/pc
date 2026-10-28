@@ -1,63 +1,63 @@
-name: Build Windows EXE
+姓名: 生成Windows EXE
 
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
+在……之上:
+workflow_dispatch:
+推:
+分支机构: [主要的]
 
-permissions:
-  contents: read
+权限:
+内容: 读
 
-jobs:
-  build:
-    runs-on: windows-latest
+工作:
+建立:
+连续的: Windows-最新
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+步骤:
+      - 姓名: 签出存储库
+uses: 操作/结帐@v4
 
-      - name: Extract source ZIP
-        shell: pwsh
-        run: |
-          Expand-Archive "GenshinRouteAssistant_0.1_source.zip" "source" -Force
-          $app = Get-ChildItem "source" -Filter "app.py" -Recurse |
-            Select-Object -First 1
-          if (!$app) {
-            throw "Cannot find app.py in the ZIP"
+      - 姓名: 提取源ZIP
+壳: pwsh
+跑: |
+展开-存档-文本路径"GensshinRouteAssistant_0.1.1_source_fixed。拉链"-目标路径“源”-力
+没有任何的"来源"-过滤器"app.py"-Recurse|
+选择-对象-第一个1
+if(！$app){
+抛出"ZIP中找不到app.py"
           }
-          "PROJECT_DIR=$($app.Directory.FullName)" |
-            Out-File $env:GITHUB_ENV -Append
+"PROJECT_DIR=$($app.Directory.FullName)"|
+out-file$env:GITHUB_ENV-append
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - 姓名: 设置python
+uses: actions/setup-python@v5
+和……一起:
+python版: "3.12"
 
-      - name: Install dependencies
-        shell: pwsh
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r "$env:PROJECT_DIR/requirements.txt"
-          pip install pyinstaller
+      - 姓名: 安装相依性
+壳: pwsh
+跑: |
+Python-m pip安装--升级pip
+PIP安装-r"$env:PROJECT_DIR/requirements.txt"
+PIP安装PyInstaller
 
-      - name: Build EXE
-        shell: pwsh
-        run: |
-          Set-Location "$env:PROJECT_DIR"
-          pyinstaller --noconfirm --clean --windowed `
-            --name GenshinRouteAssistant app.py
+      - 姓名: 组建EXE
+壳: pwsh
+跑: |
+设置位置"$env:PROJECT_DIR"
+PyInstaller-noconfirm-clean-windowd'
+现在,我们可以在这个地方.
 
-      - name: Package application
-        shell: pwsh
-        run: |
-          Compress-Archive `
-            "$env:PROJECT_DIR/dist/GenshinRouteAssistant/*" `
-            "$env:GITHUB_WORKSPACE/GenshinRouteAssistant-Windows.zip" `
+      - 姓名: 软件包应用程序
+壳: pwsh
+跑: |
+压缩档案'
+"$env:PROJECT_DIR/dist/GenshinRouteAssistant/*"'
+"$env:GITHUB_WORKSPACE/GenshinRouteAssistant-Windows。拉链"'
             -Force
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: GenshinRouteAssistant-Windows
-          path: GenshinRouteAssistant-Windows.zip
-          retention-days: 14
+      - 姓名: 上传组建成品
+uses: 操作/上载工件@v4
+和……一起:
+姓名: 根申路由助理-Windows
+路径: GenshinRouteAssistant-Windows.zip
+保留天数: 14
